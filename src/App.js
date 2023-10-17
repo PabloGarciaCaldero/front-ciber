@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 function App() {
   const [message, setMessage] = useState('');
   const [receivedMessage, setReceivedMessage] = useState('');
+  const [modifiedMessage, setModifiedMessage] = useState('');
 
   const handleSubmit = async () => {
     try {
       // Reemplaza 'URL_DEL_BACKEND' con la URL real de tu backend
-      const response = await fetch('URL_DEL_BACKEND', {
+      const response = await fetch('http://localhost:3002/api/encrypt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -17,7 +18,8 @@ function App() {
 
       if (response.ok) {
         const responseData = await response.json();
-        setReceivedMessage(responseData.message);
+        setModifiedMessage(responseData.encrypt.slice(10));
+        setReceivedMessage(responseData.encrypt);
       } else {
         setReceivedMessage('Error al recibir el mensaje');
       }
@@ -31,7 +33,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App background-image">
       <h1>Formulario de Mensaje</h1>
       <input
         type="text"
@@ -41,6 +43,8 @@ function App() {
       />
       <button onClick={handleSubmit}>Enviar Mensaje</button>
       <p>Mensaje recibido del backend: {receivedMessage}</p>
+      <p>Mensaje tratado desde backend: {modifiedMessage}</p>
+
     </div>
   );
 }
